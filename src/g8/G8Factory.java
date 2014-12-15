@@ -24,7 +24,7 @@ public class G8Factory implements PlayerFactory<BattleshipsPlayer> {
 
     @Override
     public BattleshipsPlayer getNewInstance() {
-        return new G8Factory();
+        return new G8AI();
     }
 
     @Override
