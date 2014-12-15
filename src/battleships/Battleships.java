@@ -18,6 +18,8 @@ public class Battleships {
         // TODO code application logic here
         //working?
         
+        System.out.println("Shit's working yo");
+        
     }
     
 }
