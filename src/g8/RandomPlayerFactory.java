@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package g8;
 
 import battleship.interfaces.BattleshipsPlayer;
@@ -13,33 +12,28 @@ import tournament.player.PlayerFactory;
  *
  * @author Tobias Grundtvig
  */
-public class RandomPlayerFactory implements PlayerFactory<BattleshipsPlayer>
-{
+public class RandomPlayerFactory implements PlayerFactory<BattleshipsPlayer> {
+
     private static int nextID = 1;
     private final int id;
 
-    public RandomPlayerFactory()
-    {
+    public RandomPlayerFactory() {
         id = nextID++;
     }
-    
-    
+
     @Override
-    public BattleshipsPlayer getNewInstance()
-    {
+    public BattleshipsPlayer getNewInstance() {
         return new RandomPlayer();
     }
 
     @Override
-    public String getID()
-    {
-        return "RND:"+id;
+    public String getID() {
+        return "RND:" + id;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Random player " + id;
     }
-    
+
 }
