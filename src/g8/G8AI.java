@@ -24,6 +24,7 @@ public class G8AI implements BattleshipsPlayer
 
     public G8AI()
     {
+        
     }
 
     @Override
@@ -33,6 +34,7 @@ public class G8AI implements BattleshipsPlayer
         sizeY = board.sizeY();
         for(int i = 0; i < fleet.getNumberOfShips(); ++i)
         {
+            System.out.println(fleet.getNumberOfShips());
             Ship s = fleet.getShip(i);
             boolean vertical = rnd.nextBoolean();
             Position pos;
