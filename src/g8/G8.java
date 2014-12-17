@@ -18,7 +18,9 @@ public class G8 {
     public static void main(String[] args) {
         
          BattleshipsPlayer player1 = new g8.G8AI();
+//         BattleshipsPlayer player2 = new g8.G8AI();
         BattleshipsPlayer player2 = new battleship.examples.SystematicShotPlayer();
+//        BattleshipsPlayer player2 = new battleship.examples.RandomPlayer();
         GameInstance<BattleshipsPlayer> game = Battleships.getSingleGameInstance();
         GameResult res = game.run(player1, player2);
         System.out.println("Result: ");
@@ -26,6 +28,7 @@ public class G8 {
         System.out.println("player2 major (Points for the game): " + res.majorPointsB);
         System.out.println("player1 minor (Rounds won): " + res.minorPointsA);
         System.out.println("player2 minor (Rounds won): " + res.minorPointsB);
+        
     }
     
 }
