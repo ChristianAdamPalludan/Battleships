@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  *
@@ -22,23 +23,24 @@ import java.util.Random;
  */
 public class G8AI implements BattleshipsPlayer {
 
-    ArrayList<Position> specialfire;
-    private int[][] shotMap;
+    Position lastShot = new Position(10, 10);
+    private boolean hit;
+    Stack<Position> specialfire = new Stack();
+    ArrayList<Position> shotsFired = new ArrayList<>();
+    private boolean offset = false;
     private boolean[][] shipMap;
     private boolean vertical;
     private final static Random rnd = new Random();
     private int sizeX;
     private int sizeY;
-    private int threes = 1;
     private int place = 1;
-    private int column = 2;
-    private int row = 2;
     private int nextX;
     private int nextY;
     private int hitX;
     private int hitY;
     private int x;
     private int y;
+
     private int count;
 
     public G8AI() {
@@ -207,42 +209,88 @@ public class G8AI implements BattleshipsPlayer {
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-        
-        Position shot = new Position(nextX, nextY);
-        
-//        if (specialfire.size() != 0) {
-//            for (int i = 0; i < specialfire.size(); i++) {
-//                shot = specialfire.get(i);
-//                System.out.println("shooting");
-//                specialfire.remove(i);
-//            }
-//
-//        } 
-//        else {
-//        }
- 
-            ++nextX;
-            if (nextX >= sizeX) {
-                nextX = 0;
-                ++nextY;
-                if (nextY >= sizeY) {
-                    nextY = 0;
-                }
-            }
-//        }
 
-        return shot;
+        if (specialfire.isEmpty()) {
+
+            Position shot = new Position(nextX, nextY);
+
+            while (!validShot(shot)) {
+                nextX += 2;
+                if (nextX >= sizeX) {
+                    if (!offset) {
+                        nextX = 1;
+                        offset = true;
+                    } else {
+                        nextX = 0;
+                        offset = false;
+                    }
+                    ++nextY;
+                    if (nextY >= sizeY) {
+                        nextY = 0;
+                        break;
+                    }
+                }
+                shot = new Position(nextX, nextY);
+            }
+                lastShot = shot;
+                shotsFired.add(shot);
+                return shot;
+           
+        } else {
+            shotsFired.add(specialfire.peek());
+            lastShot = specialfire.peek();
+            return specialfire.pop();
+
+        }
     }
 
     @Override
-    public void hitFeedBack(boolean hit, Fleet enemyShips) {
-//        if (hit) 
-//            count++;
-//            System.out.println(count);
-//            specialfire.add(new Position(x - 1, y));
-//            specialfire.add(new Position(x + 1, y));
-//            specialfire.add(new Position(x, y - 1));
-//            specialfire.add(new Position(x, y + 1));
+    public void hitFeedBack(boolean hit, Fleet enemyShips
+    ) {
+        this.hit = hit;
+        if (hit) {
+            Position top = new Position(lastShot.x, lastShot.y - 1);
+            Position bottom = new Position(lastShot.x, lastShot.y + 1);
+            Position left = new Position(lastShot.x - 1, lastShot.y);
+            Position right = new Position(lastShot.x + 1, lastShot.y);
+
+            if (validShot(left)) {
+                specialfire.push(left);
+
+            }
+            if (validShot(right)) {
+                specialfire.push(right);
+
+            }
+            if (validShot(top)) {
+                specialfire.push(top);
+
+            }
+            if (validShot(bottom)) {
+                specialfire.push(bottom);
+
+            }
+
+        }
+
+    }
+
+    private boolean validShot(Position position) {
+        if (!(position.x < 0) && !(position.x > sizeX - 1) && !(position.y < 0) && !(position.y > sizeY - 1)) {
+            return unUsed(position);
+
+        }
+        return false;
+    }
+
+    private boolean unUsed(Position position) {
+        for (Position shot : shotsFired) {
+            if (shot.x == position.x && shot.y == position.y) {
+                return false;
+            }
+
+        }
+        return true;
 
     }
 
@@ -253,7 +301,7 @@ public class G8AI implements BattleshipsPlayer {
 
     @Override
     public void startRound(int round) {
-        //Do nothing
+        this.shotsFired.clear();
     }
 
     @Override
@@ -265,4 +313,5 @@ public class G8AI implements BattleshipsPlayer {
     public void endMatch(int won, int lost, int draw) {
         //Do nothing
     }
+
 }
